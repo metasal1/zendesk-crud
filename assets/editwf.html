@@ -14,13 +14,15 @@
     <form>
 
     <div class="text-xl font-bold ">UPDATE Workflow Type</div>
+    <div class="text-red-400 italic " id="msgBox"></div>
+
     <div class="grid grid-cols-2 gap-2">
     
     <label for="id">Workflow Id</label>
     <input class="b-2 bg-gray-100 p-2" id="id" type="text" required />
 
-    <label for="name">Workflow Name</label>
-    <input class="b-2 bg-gray-100 p-2" id="name" type="text" required  />
+    <label for="wfname">Workflow Name</label>
+    <input class="b-2 bg-gray-100 p-2" id="wfname" type="text" required  />
 
     <label for="group">Group</label>
     <input class="b-2 bg-gray-100 p-2" id="group" type="text" required  />
@@ -66,7 +68,7 @@
     }).then(res => 
     {
       console.log(res.responseJSON.data)
-      document.getElementById('name').value = res.responseJSON.data.attributes.name;
+      document.getElementById('wfname').value = res.responseJSON.data.attributes.name;
       document.getElementById('id').value = res.responseJSON.data.attributes.id;
       document.getElementById('group').value = res.responseJSON.data.attributes.group;
       document.getElementById('subgroup').value = res.responseJSON.data.attributes.subgroup;
@@ -83,12 +85,21 @@
   });
 
   function updateWF(uuid){
+
+    if (id.value === '' || wfname.value === '' || group.value === '' || subgroup.value === '') {
+        var msg = 'Please complete all fields';
+        console.log(msg)
+        client.invoke('notify', msg);
+        msgBox.textContent = msg;
+
+      }
+      else {
     var url = `/api/sunshine/objects/records/${uuid}`;
     const data = {
     "data": {
     "attributes": {
       "id": document.getElementById('id').value,
-      "name": document.getElementById('name').value,
+      "name": document.getElementById('wfname').value,
       "group": document.getElementById('group').value,
       "subgroup": document.getElementById('subgroup').value,
       "entity_type": document.getElementById('entity').value,
@@ -117,6 +128,7 @@
     client.invoke('notify', `Workflow not updated: ${error.responseText}`);
   }
   )}
+}
 </script>
 <div class="grid content-center">
   <button class="content-center bg-pink-600 rounded-md text-white p-2 m-2 hover:bg-pink-800" onclick="updateWF(uuid)">Update</button>
