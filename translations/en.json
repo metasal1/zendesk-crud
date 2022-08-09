@@ -1,0 +1,20 @@
+{
+  "app": {
+    "name": "ZD Adminer",
+    "short_description": "Features that should have been in Zendesk from the beginning",
+    "long_description": "We built some little features that make life easier!!!",
+    "installation_instructions": "Simply click install.",
+    "parameters": {
+      "base_url": { "label": "Base URL",
+      "helpText": "FQDN works best"
+    },
+      "token": { "label": "Token",
+      "helpText": "You can't see this"
+    },
+      "useSSL": {
+        "label": "Use SSL?",
+        "helpText": "Use SSL for a secure connection"
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Workflows Manager",
+  "author": {
+    "name": "Salim Karim",
+    "email": "salim.karim@aware.com.au",
+    "url": "https://aware.com.au"
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "parameters": [
+    {
+      "name": "base_url",
+      "type": "url",
+      "required": true
+    },
+    {
+      "name": "token",
+      "type": "number",
+      "secure": true
+    },
+    {
+      "name": "useSSL",
+      "type": "checkbox"
+    }
+  ],
+  "location": {
+    "support": {
+      "nav_bar": {
+        "url": "assets/iframe.html",
+        "flexible": true
+      }
+    }
+  },
+  "version": "1.0.5",
+  "frameworkVersion": "2.0"
+}

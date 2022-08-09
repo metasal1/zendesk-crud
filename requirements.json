@@ -1,0 +1,57 @@
+{
+    "targets": {
+      "a_basecamp_target": {
+        "title": "A sample Target",
+        "type": "basecamp_target",
+        "active": true,
+        "target_url": "http://mytarget.com",
+        "token": "123456",
+        "project_id": "99999",
+        "resource": "todo"
+      },
+  
+      "an_email_target": {
+        "title": "A sample email Target",
+        "type": "email_target",
+        "email": "foo@bar.com",
+        "subject": "Hello, from this target!"
+      }
+    },
+  
+    "webhooks": {
+      "an_example_webhook": {
+        "authentication": {
+          "add_position": "header",
+          "data": {
+            "password": "hello_123",
+            "username": "john_smith"
+          },
+          "type": "basic_auth"
+        },
+        "endpoint": "https://example.com/status/200",
+        "http_method": "GET",
+        "name": "Example Webhook",
+        "request_format": "json",
+        "status": "active",
+        "subscriptions": [
+          "conditional_ticket_events"
+        ],
+        "signing_secret": {
+          "algorithm": "SHA256",
+          "secret": "abcdefghijklmnopqrstuvwxyz"
+        }
+      }
+    },
+  
+    "ticket_fields": {
+      "support_description": {
+        "type": "text",
+        "title": "Support description"
+      },
+  
+      "number_of_issues": {
+        "type": "integer",
+        "title": "Number of issues"
+      }
+    }
+  }

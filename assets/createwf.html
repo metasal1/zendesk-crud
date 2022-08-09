@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Create Workflow  </title>
+    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/combine/npm/@zendeskgarden/css-bedrock@7.0.21,npm/@zendeskgarden/css-utilities@4.3.0"
+      />
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="styles.css" />
+
+    <script>
+      function handleCheckbox(checkbox){
+        console.log(checkbox.checked)
+      }
+    </script>
+  </head>
+  <body>
+    <div class="grid grid-cols-2">
+    <label for="name">Workflow Name</label>
+    <input class="b-2 bg-gray-100 p-2" id="name" type="text"/>
+
+    <label for="name">Workflow Id</label>
+    <input class="b-2 bg-gray-100 p-2" id="id" type="text" />
+
+    <label for="group">Group</label>
+    <input class="b-2 bg-gray-100 p-2" id="group" type="text" />
+
+    <label for="name">Subgroup</label>
+    <input class="b-2 bg-gray-100 p-2" id="subgroup" type="text" />
+
+    <label for="entity_type">Entity Type</label>
+    <select class="b-2 bg-gray-100 p-2" id="entity" >
+      <option selected>Member</option>
+      <option>Employer</option>
+      <option>Staff</option>
+    </select>
+
+    <label for="member">Member Id required?</label>
+    <input id="wfmid" type="checkbox" checked onchange="handleCheckbox(this);">
+
+    <label for="account">Account Number required?</label>
+    <input id="wfan" type="checkbox" checked onchange="handleCheckbox(this);">
+    <button class="bg-pink-600 rounded-md text-white p-2 m-2 hover:bg-pink-400" onclick="createWF()">Create</button>
+
+  </div>
+    <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
+  <script>
+      var client = ZAFClient.init();
+
+      function createWF(){
+        var url = "/api/sunshine/objects/records";
+
+        const data = {
+        "data": {
+        "type": "workflows",
+        "attributes": {
+          "id": document.getElementById('id').value,
+          "name": document.getElementById('name').value,
+          "group": document.getElementById('group').value,
+          "subgroup": document.getElementById('subgroup').value,
+          "entity_type": entity.value,
+          "requiresMemberId": wfmid.checked,
+          "requiresAccountNumber": wfan.checked,
+            }
+          }
+        }
+
+    client.request({
+    url: url,
+    httpCompleteResponse: true,
+    contentType: 'application/json',
+    method: 'POST',
+    data: JSON.stringify(data)
+  }).then(res => 
+  {
+    console.log(res)
+    client.invoke('notify', `Created Workflow successfully: ${res}`);
+    sessionStorage.clear();
+    client.invoke('destroy')
+  }, 
+  error => {
+    console.log(error.responseText)
+    client.invoke('notify', `Workflow not created: ${error.responseText}`);
+  }
+  )}
+</script>
+    </div>
+  </body>
+</html>

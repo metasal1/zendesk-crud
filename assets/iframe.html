@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Workflows Manager</title>
+    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/combine/npm/@zendeskgarden/css-bedrock@7.0.21,npm/@zendeskgarden/css-utilities@4.3.0"
+      />
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+
+      function handleCheckbox(checkbox){
+        console.log(checkbox)
+        if (checkbox.checked == true){
+          window.sessionStorage.setItem(checkbox.id,true)
+        }
+        else {
+          window.sessionStorage.setItem(checkbox.id,false)
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="agentcount" class="italic text-right pr-5"></div>
+    
+    <button class="bg-pink-600 rounded-md text-white p-2 m-2 hover:bg-pink-400" onclick="openCreate()">Create</button>
+
+    <div id="wrapper"></div>
+    <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
+<script>
+
+  function openCreate(){
+  client.invoke('instances.create', {
+  location: 'modal',
+  url: 'assets/createwf.html',
+  size: { // optional
+    width: '450px',
+    height: '300px'
+  }
+}).then(function(modalContext) {
+  var modalClient = client.instance(modalContext['instances.create'][0].instanceGuid);
+  modalClient.on('modal.close', function() {
+    window.location.reload();
+  });
+});
+  }
+  function openEdit(id){
+  client.invoke('instances.create', {
+  location: 'modal',
+  url: `assets/editwf.html?id=${id}`,
+  size: { // optional
+    width: '450px',
+    height: '300px'
+  }
+}).then(function(modalContext) {
+  var modalClient = client.instance(modalContext['instances.create'][0].instanceGuid);
+  modalClient.on('modal.close', function() {
+    window.location.reload();
+  });
+});
+
+  }
+  function deleteWF(id){
+    console.log(id)
+
+    client.request({
+    url: `/api/sunshine/objects/records/${id}`,
+    method: 'DELETE',
+  }).then(res => 
+  {
+    console.log(res)
+    client.invoke('notify', `Deleted successfully: ${res}`);
+    window.location.reload();
+  }, error => {
+    console.log(error.responseText)
+    client.invoke('notify', `Error deleting: ${error.responseText}`);
+  }
+    )
+  }
+      var counter = 0
+      var client = ZAFClient.init();
+      var np = "/api/sunshine/objects/records?type=workflows";
+      
+      var userlist = [];
+
+        client.request(np).then(
+          async function (users) {
+
+            console.log(users)
+            np = users.next_page;
+            userlist.count = users.data.length;
+            document.getElementById('agentcount').innerText = '🟰 ' + userlist.count;
+            userlist.users = users.data;
+          
+          if (users.next_page != null){
+              
+            await client.request(users.next_page).then((next_page)=>{
+                  Array.prototype.push.apply(userlist.users, next_page.users)
+              })
+            }
+              new gridjs.Grid({
+                columns: [{
+                  id: "id", 
+                  name: "Actions",
+                  formatter: (cell) => gridjs.html(`
+                  <button class="bg-pink-600 text-sm rounded-md text-white p-1 m-1 hover:bg-pink-400" m-2 p-2" onclick="deleteWF('${cell}')" id="${cell}">DELETE</button>
+                  <button class="bg-green-600 text-sm rounded-md text-white p-1 m-1 hover:bg-green-400" m-2 p-2" onclick="openEdit('${cell}')" id="${cell}">EDIT</button>
+                  `)
+                  },
+                  // {data: (row) => row.id,
+                  // name: 'Z Id'
+                  // },
+                  // {data: (row) => row.external_id,
+                  // name: 'External Id'
+                  // },
+                  {data: (row) => row.attributes.id,
+                  name: 'Workflow Id'
+                  },
+                  {data: (row) => row.attributes.name,
+                  name: 'Workflow Name'
+                  },
+                  {data: (row) => row.attributes.group,
+                  name: 'Group'
+                  },
+                  {data: (row) => row.attributes.subgroup,
+                  name: 'Subgroup'
+                  },
+                  {data: (row) => row.attributes.entity_type,
+                  name: 'Entity Type'
+                  },
+                  {data: (row) => row.attributes.requiresMemberId,
+                  name: 'Member',
+                  formatter: (cell) => {if(cell === false){ return '❌'} else { return '✅'} }  
+                  },
+                  {data: (row) => row.attributes.requiresAccountNumber,
+                  name: 'Account',
+                  formatter: (cell) => {if(cell === false){ return '❌'} else { return '✅'} }  
+                  }],
+                sort:true,
+                resizable: true,
+                search: true,
+                fixedHeader: true,
+                language: {
+                  'search': { 'placeholder': '🔍  Filter...'}
+                },
+                data: userlist.users
+              }).render(document.getElementById("wrapper"));      
+
+
+        },
+        function (error) {
+          console.error(error.responseText);
+        } 
+        )
+
+        let fs = ''
+      
+    </script>
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    </div>
+    <footer class="footer text-xs u-bc-grey-500">&copy; Copyright 2022 | v0.0.3</footer>
+  </body>
+</html>

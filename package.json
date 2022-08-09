@@ -1,0 +1,20 @@
+{
+  "name": "Workflows Manager",
+  "version": "1.0.0",
+  "description": "[brief description of the app]",
+  "main": "const formatDuration = ms => {.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metasal1/hulk.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/metasal1/hulk/issues"
+  },
+  "homepage": "https://github.com/metasal1/hulk#readme"
+}

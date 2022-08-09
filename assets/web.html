@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Worker</title>
+  </head>
+  <body>
+    <button id="a" onclick="clicker(this.id);">Worker</button>
+    <button id="b" onclick="console.log(this.id);">Main Thread</button>
+
+    <pre id="output">Output</pre>
+    <script>
+      const worker = new Worker('worker.js');
+
+      function clicker(id){
+        console.log(`${id} was clicked`)
+        worker.postMessage('test')
+      }
+    </script>
+  </body>
+</html>
