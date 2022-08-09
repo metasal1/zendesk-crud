@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/metasal1/hulk.git"
+    "url": "git+https://github.com/metasal1/zendesk-crud.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/metasal1/hulk/issues"
+    "url": "https://github.com/metasal1/zendesk-crud/issues"
   },
-  "homepage": "https://github.com/metasal1/hulk#readme"
+  "homepage": "https://github.com/metasal1/zendeks-crud#readme"
 }
