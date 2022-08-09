@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "ZD Adminer",
+    "name": "Zendesk CRUD App",
     "short_description": "Features that should have been in Zendesk from the beginning",
     "long_description": "We built some little features that make life easier!!!",
     "installation_instructions": "Simply click install.",

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Create Workflow  </title>
+    <title>Create Workflow</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/combine/npm/@zendeskgarden/css-bedrock@7.0.21,npm/@zendeskgarden/css-utilities@4.3.0"
@@ -10,15 +10,12 @@
       <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css" />
 
-    <script>
-      function handleCheckbox(checkbox){
-        console.log(checkbox.checked)
-      }
-    </script>
   </head>
   <body>
     <div class="text-xl font-bold ">CREATE Workflow Type</div>
 
+    <form action="#" id="createForm">
+      
     <div class="grid grid-cols-2 gap-2">
     <label for="id">Workflow Id</label>
     <input class="b-2 bg-gray-100 p-2" id="id" type="text" required />
@@ -44,8 +41,9 @@
 
     <label for="wfan">Account Number required?</label>
     <input id="wfan" type="checkbox" checked>
-    <input id="clickBtn" onclick="createWF()" type="button" value="Create" class="bg-pink-600 rounded-md text-white p-2 m-2 hover:bg-pink-400"  />
+    <input id="clickBtn" onclick="createWF()" type="submit" value="Create" class="bg-pink-600 rounded-md text-white p-2 m-2 hover:bg-pink-400"  />
     </div>
+    </form>
     <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
   <script>
       var client = ZAFClient.init();

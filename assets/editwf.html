@@ -3,69 +3,61 @@
   <head>
     <meta charset="utf-8" />
     <title>Edit Workflow</title>
-    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/combine/npm/@zendeskgarden/css-bedrock@7.0.21,npm/@zendeskgarden/css-utilities@4.3.0"
       />
       <script src="https://cdn.tailwindcss.com"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="styles.css" />
-
-    <script>
-      function handleCheckbox(checkbox){
-        console.log(checkbox.value)
-      }
-    </script>
   </head>
   <body>
-    <div class="text-xl font-bold ">UPDATE Workflow Type</div>
-    <div class="text-center text-gray-200" id="uuid"></div>
-    <div class="grid grid-cols-2">
-      <label for="name">Workflow Name</label>
-    <input class="b-2 bg-gray-100 p-2" id="name" type="text" onchange="window.sessionStorage.setItem('wfn',this.value)" />
+    <form>
 
-    <label for="name">Workflow Id</label>
-    <input class="b-2 bg-gray-100 p-2" id="id" type="text" onchange="window.sessionStorage.setItem('wfid',this.value)"/>
+    <div class="text-xl font-bold ">UPDATE Workflow Type</div>
+    <div class="grid grid-cols-2 gap-2">
+    
+    <label for="id">Workflow Id</label>
+    <input class="b-2 bg-gray-100 p-2" id="id" type="text" required />
+
+    <label for="name">Workflow Name</label>
+    <input class="b-2 bg-gray-100 p-2" id="name" type="text" required  />
 
     <label for="group">Group</label>
-    <input class="b-2 bg-gray-100 p-2" id="group" type="text" onchange="window.sessionStorage.setItem('wfg',this.value)" />
+    <input class="b-2 bg-gray-100 p-2" id="group" type="text" required  />
 
-    <label for="name">Subgroup</label>
-    <input class="b-2 bg-gray-100 p-2" id="subgroup" type="text" onchange="window.sessionStorage.setItem('wfsg',this.value)" />
+    <label for="subgroup">Subgroup</label>
+    <input class="b-2 bg-gray-100 p-2" id="subgroup" type="text" required />
 
-    <label for="entity_type">Entity Type</label>
-    <select class="b-2 bg-gray-100 p-2" id="entity" onchange="window.sessionStorage.setItem('wfet',this.value)">
+    <label for="entity">Entity Type</label>
+    <select class="b-2 bg-gray-100 p-2" id="entity">
       <option selected>Member</option>
       <option>Employer</option>
       <option>Staff</option>
     </select>
 
     <label for="wfmid">Member Id required?</label>
-    <input id="wfmid" type="checkbox" checked onchange="handleCheckbox(this);">
+    <input id="wfmid" type="checkbox" checked >
 
     <label for="wfan">Account Number required?</label>
-    <input id="wfan" type="checkbox" checked onchange="handleCheckbox(this);">
+    <input id="wfan" type="checkbox" checked >
+  </form>
     
   </div>
-  <div class="grid content-center">
-    <button class="content-center bg-pink-600 rounded-md text-white p-2 m-2 hover:bg-pink-800" onclick="updateWF(window.sessionStorage.getItem('id'))">Update</button>
-  </div>
+
     <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
 <script>
   var client = ZAFClient.init();
+  var uuid;  
 
   document.addEventListener("DOMContentLoaded", function(event) {
     var params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
     });
-    var id = params.id
-    document.getElementById('uuid').innerText = id;
-    window.sessionStorage.setItem('id', id)
-    console.log('params', id)
-
-    function getWf(id){
-    var url = `/api/sunshine/objects/records/${id}`;
+    uuid = params.id
+    console.log('params uuid', uuid)
+  
+    function getWf(uuid){
+    var url = `/api/sunshine/objects/records/${uuid}`;
     client.request({
       url: url,
       httpCompleteResponse: true,
@@ -87,11 +79,11 @@
     }
     )}
 
-    getWf(params.id);
+    getWf(uuid);
   });
 
-  function updateWF(id){
-    var url = `/api/sunshine/objects/records/${id}`;
+  function updateWF(uuid){
+    var url = `/api/sunshine/objects/records/${uuid}`;
     const data = {
     "data": {
     "attributes": {
@@ -115,7 +107,7 @@
   }).then(res => 
   {
     console.log(res)
-    client.invoke('notify', `Updated Workflow successfully: ${res}`);
+    client.invoke('notify', `Updated Workflow successfully`);
     sessionStorage.clear();
     client.invoke('destroy')
 
@@ -126,6 +118,9 @@
   }
   )}
 </script>
+<div class="grid content-center">
+  <button class="content-center bg-pink-600 rounded-md text-white p-2 m-2 hover:bg-pink-800" onclick="updateWF(uuid)">Update</button>
+</div>
     </div>
   </body>
 </html>
